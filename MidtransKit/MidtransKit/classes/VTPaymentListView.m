@@ -70,6 +70,12 @@
     return cell;
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    static dispatch_once_t onceToken = 0;
+    dispatch_once(&onceToken, ^{
+        [[SNPUITrackingManager shared] trackEventName:@"Page Scrolled" additionalParameters:@{@"Name":@"Payment list"}];
+    });
+}
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

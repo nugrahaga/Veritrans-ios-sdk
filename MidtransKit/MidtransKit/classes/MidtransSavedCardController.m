@@ -52,9 +52,17 @@
     }
     return nil;
 }
-
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    static dispatch_once_t onceToken = 0;
+    dispatch_once(&onceToken, ^{
+        [[SNPUITrackingManager shared] trackEventName:@"Page Scrolled" additionalParameters:@{@"Name":@"Card List"}];
+    });
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[SNPUITrackingManager shared] trackEventName:@"Page Viewed" additionalParameters:@{@"Name":@"Card List"}];
+
     self.footerView = [[VTBundle loadNibNamed:@"MidtransSavedCardFooter" owner:self options:nil] lastObject];
     [self.footerView.addCardButton addTarget:self action:@selector(addCardPressed:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -121,7 +129,7 @@
 }
 
 - (void)addCardPressed:(id)sender {
-    [[SNPUITrackingManager shared] trackEventName:@"pg cc card details" additionalParameters:@{@"card mode":@"normal"}];
+     [[SNPUITrackingManager shared] trackEventName:@"Button Clicked" additionalParameters:@{@"name":@"Add New Credit Card",@"OnPage":@"Card List"}];
     MidtransNewCreditCardViewController *vc = [[MidtransNewCreditCardViewController alloc] initWithToken:self.token
                                                                                        paymentMethodName:self.paymentMethod
                                                                                        andCreditCardData:self.creditCard
@@ -132,7 +140,6 @@
 }
 
 - (void)performOneClickWithCard:(MidtransMaskedCreditCard *)card {
-      [[SNPUITrackingManager shared] trackEventName:@"btn confirm payment"];
     
     VTConfirmPaymentController *vc = [[VTConfirmPaymentController alloc] initWithCardNumber:card.maskedNumber
                                                grossAmount:self.token.transactionDetails.grossAmount];
@@ -200,11 +207,11 @@
     MidtransMaskedCreditCard *card = self.cards[indexPath.row];
     if (CC_CONFIG.tokenStorageEnabled) {
         if ([card.tokenType isEqualToString:TokenTypeOneClick]) {
-             [[SNPUITrackingManager shared] trackEventName:@"pg cc card details" additionalParameters:@{@"card mode":@"one click"}];
+            
             [self performOneClickWithCard:card];
         }
         else {
-              [[SNPUITrackingManager shared] trackEventName:@"pg cc card details" additionalParameters:@{@"card mode":@"two click"}];
+            
             [self performTwoClicksWithCard:card];
         }
     }
@@ -213,7 +220,7 @@
             [self performOneClickWithCard:card];
         }
         else {
-              [[SNPUITrackingManager shared] trackEventName:@"pg cc card details" additionalParameters:@{@"card mode":@"two click"}];
+            
             [self performTwoClicksWithCard:card];
         }
     }

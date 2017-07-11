@@ -92,7 +92,7 @@ UIAlertViewDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = UILocalizedString(@"creditcard.input.title", nil);
-    
+    [[SNPUITrackingManager shared] trackEventName:@"Page Viewed" additionalParameters:@{@"Name":@"CC Card Details"}];
     if (self.currentMaskedCards) {
         self.maskedCards = [NSMutableArray arrayWithArray:self.currentMaskedCards];
     }
@@ -587,9 +587,8 @@ UIAlertViewDelegate
 }
 
 - (IBAction)submitPaymentDidtapped:(id)sender {
-    
-    [[SNPUITrackingManager shared] trackEventName:@"btn confirm payment"];
-    
+    [[SNPUITrackingManager shared] trackEventName:@"Button Clicked" additionalParameters:@{@"Name":@"Confirm Payment Credit Card",@"OnPage":@"CC Card Details"}];
+
     if (self.installmentAvailable && self.installmentCurrentIndex !=0 && !self.bniPointActive) {
         self.installmentTerms = [NSString stringWithFormat:@"%@_%@",self.installmentBankName,
                                  [[self.installment.terms  objectForKey:self.installmentBankName] objectAtIndex:self.installmentCurrentIndex -1]];
@@ -787,6 +786,9 @@ UIAlertViewDelegate
             self.creditCardInfo.savedTokens = savedTokensM;
             
             if ([self.delegate respondsToSelector:@selector(didDeleteSavedCard)]) {
+                
+                    [[SNPUITrackingManager shared] trackEventName:@"Button Clicked" additionalParameters:@{@"Name":@"Delete Credit Card",@"OnPage":@"CC Card Details"}];
+                
                 [self.delegate didDeleteSavedCard];
             }
         }];

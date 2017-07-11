@@ -22,8 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.title = @"My Card";
+
     
     self.navigationItem.backBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle:@""
@@ -41,6 +40,7 @@
     
     // Do any additional setup after loading the view from its nib.
 }
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -48,11 +48,7 @@
     
     [self.tableView reloadData];
 }
-- (void)addCardPressed:(id)sender{
-    MDAddCardViewController *addCardVC = [[MDAddCardViewController alloc]
-                                          initWithNibName:@"MDAddCardViewController" bundle:nil];
-    [self.navigationController pushViewController:addCardVC animated:YES];
-}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.maskedCard.count;
 }
